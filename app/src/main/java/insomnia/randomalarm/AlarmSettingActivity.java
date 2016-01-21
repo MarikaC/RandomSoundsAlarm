@@ -9,7 +9,11 @@ import android.os.Bundle;
 import android.provider.MediaStore.Images.Media;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.InputStream;
@@ -17,12 +21,30 @@ import java.io.InputStream;
 
 public class AlarmSettingActivity extends AppCompatActivity {
     private static final int REQUEST_GALLERY = 0;
-    private ImageView imgView;
+    //AlarmItem mAlarmItem = new AlarmItem();
+    TimePicker timePicker;
+    EditText label;
+    Switch snooze;
+    CheckBox Mon,Tue,Wed,Thu,Fri,Sat,Sun;
+    ImageView imgView;
+    String ImageFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_setting);
+        //timepickerを24時間表示へ
+        timePicker = (TimePicker)this.findViewById(R.id.sTimePicker);
+        timePicker.setIs24HourView(true);
+        label = (EditText)findViewById(R.id.sLabel);
+        snooze = (Switch)findViewById(R.id.sSnoozeSwitch);
+        Mon = (CheckBox)findViewById(R.id.sMonCheckBox);
+        Tue = (CheckBox)findViewById(R.id.sTueCheckBox);
+        Wed = (CheckBox)findViewById(R.id.sWedCheckBox);
+        Thu = (CheckBox)findViewById(R.id.sThuCheckBox);
+        Fri = (CheckBox)findViewById(R.id.sFriCheckBox);
+        Sat = (CheckBox)findViewById(R.id.sSatCheckBox);
+        Sun = (CheckBox)findViewById(R.id.sSunCheckBox);
         imgView = (ImageView)findViewById(R.id.sPhotoImageView);//設定済みの場合は初期値を入れる
     }
 
@@ -47,8 +69,8 @@ public class AlarmSettingActivity extends AppCompatActivity {
                 // 選択した画像を表示
                 imgView.setImageBitmap(img);
                 //filepath取得部分
-                String picturePath = getFilepath(data);
-                Toast.makeText(this,picturePath,Toast.LENGTH_SHORT).show();
+                ImageFilePath = getFilePath(data);
+                Toast.makeText(this,ImageFilePath,Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(this, "Failure", Toast.LENGTH_SHORT).show();
             }
@@ -56,7 +78,7 @@ public class AlarmSettingActivity extends AppCompatActivity {
 
     }
 
-    public String getFilepath(Intent data){
+    public String getFilePath(Intent data){
         Uri selectedImage = data.getData();
         String[] filePathColumn = { Media.DATA };
         Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
@@ -68,11 +90,30 @@ public class AlarmSettingActivity extends AppCompatActivity {
         return picturePath;
     }
 
+    /**
+     * SQliteにalarmItemのfieldを記録
+     * AlarmListにlabel,whenRing,validを記録
+     */
     public void CreateButtonOnClick(View view){
-       // Main main = new Main();
-//        Intent intent = new Intent();
-//        intent.setClassName("insomnia.randomalarm", "insomnia.randomalarm.Main");
-//        startActivity(intent);
+        //alarmの時間って型は何で指定するの？
+        /*→milliseconds
+        timepickerの時間をmilliに変換してcalenderクラスの時間に変換してからsetする
+         */
+        MyAlarmManager AlarmManager = new MyAlarmManager();
+        long triggertime = AlarmManager.ConvertTriggerTimeMilli(timePicker);
+        AlarmItem alarmItem = new AlarmItem(triggertime,label.getText().toString(),snooze.isChecked(),
+                Mon.isChecked(),Tue.isChecked(),Wed.isChecked(),Thu.isChecked(),Fri.isChecked(),
+                Sat.isChecked(),Sun.isChecked(),ImageFilePath);
+
+//        List<AlarmItem> AlarmItemList = null;
+//        AlarmItemList.add(alarmItem);
+        //本当はここにDBのalarmItemをaddする処理が入る
+
+        AlarmListAdapter adapter = new AlarmListAdapter(getApplicationContext());
+        adapter.mainAlarmList.add(alarmItem);
+        Intent intent = new Intent(this,MainActivity.class);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
         finish();
     }
 

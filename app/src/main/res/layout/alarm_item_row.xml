@@ -4,14 +4,25 @@
     android:layout_height="match_parent"
     android:id="@+id/label">
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="TriggerTime"
+        android:id="@+id/itemTriggerTime"
+        android:layout_above="@+id/itemWhenring"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Label"
         android:id="@+id/itemLabel"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/itemSnooze"
+        android:layout_toEndOf="@+id/itemSnooze"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,9 +30,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="WhenRing"
         android:id="@+id/itemWhenring"
-        android:layout_below="@+id/itemLabel"
+        android:layout_alignTop="@+id/itemSnooze"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,10 +41,8 @@
         android:text="Snooze"
         android:id="@+id/itemSnooze"
         android:layout_below="@+id/itemLabel"
-        android:layout_toRightOf="@+id/itemWhenring"
-        android:layout_toEndOf="@+id/itemWhenring"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp" />
+        android:layout_toRightOf="@+id/itemTriggerTime"
+        android:layout_toEndOf="@+id/itemTriggerTime"/>
 
     <Switch
         android:layout_width="wrap_content"
@@ -45,5 +54,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/itemWhenring" />
+
 
 </RelativeLayout>

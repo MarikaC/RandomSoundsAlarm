@@ -1,32 +1,74 @@
 package insomnia.randomalarm;
 
-import android.widget.ImageView;
-
 /**
  * Created by OwnerMC on 16/01/04.
  */
 public class AlarmItem {
 
-    long mId;
-    long mTriggerTime;
-    String mLabel;
-    boolean mSnooze;
-    boolean mMon;
-    boolean mTue;
-    boolean mWed;
-    boolean mThu;
-    boolean mFri;
-    boolean mSat;
-    boolean mSun;
-    ImageView mImage;
+    private long mTriggerTime;
+    private String mLabel;
+    private boolean mSnooze;
+    private boolean mMon,mTue,mWed,mThu,mFri,mSat,mSun = false;
+    private String mWhenRing = "";
+    private String mImageFilePath;
+    private boolean mValid = true;
+
+    /**
+     * Constructor
+     */
+    public AlarmItem(long triggerTime, String label, boolean snooze, boolean mon, boolean tue,
+                     boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, String imageFilePath) {
+        mTriggerTime = triggerTime;
+        mLabel = label;
+        mSnooze = snooze;
+        mMon = mon;
+        mTue = tue;
+        mWed = wed;
+        mThu = thu;
+        mFri = fri;
+        mSat = sat;
+        mSun = sun;
+        mImageFilePath = imageFilePath;
+        mWhenRing = setWhenRing();
+    }
+    //public  AlarmItem(){}
 
 
-    public long getId() {
-        return mId;
+    public  String getWhenRing(){
+        return mWhenRing;
     }
 
-    public void setId(long id) {
-        mId = id;
+    public String setWhenRing(){
+        if(mMon && mTue && mWed && mThu && mFri){
+            mWhenRing = "Weekday";
+            if(mSat && mSun){
+                mWhenRing = "Everyday";
+            }
+        }else if(mSat && mSun && ((mMon && mTue && mWed && mThu && mFri)!= true)){
+            mWhenRing = "Weekend";
+        }else{
+            String[] simpleday = new String[6];
+            if(mMon){simpleday[0] = "Mon";}
+            if(mTue){simpleday[1] = "Tue";}
+            if(mWed){simpleday[2] = "Wed";}
+            if(mThu){simpleday[3] = "Thu";}
+            if(mFri){simpleday[4] = "Fri";}
+            if(mFri){simpleday[5] = "Sat";}
+            if(mSun){simpleday[6] = "Sun";}
+
+            for(String sd : simpleday){
+                if(sd == null){
+                    continue;
+                }
+                if(sd == "Sun"){
+                    mWhenRing = "Sun";
+                    break;
+                }
+                mWhenRing = mWhenRing + sd + ",";
+            }
+        }
+
+        return mWhenRing;
     }
 
     public long getTriggerTime() {
@@ -35,6 +77,12 @@ public class AlarmItem {
 
     public void setTriggerTime(long triggerTime) {
         mTriggerTime = triggerTime;
+    }
+
+    public String TriggerTimeForText(){
+        String ttft = String.valueOf(mTriggerTime);//??ww
+        //longをStringへ変換する処理
+        return ttft;
     }
 
     public String getLabel() {
@@ -53,39 +101,15 @@ public class AlarmItem {
         mSnooze = snooze;
     }
 
-    public String getWhenRing(){
-        String whenRing = "";
-        if(mMon && mTue && mWed && mThu && mFri){
-            whenRing = "Weekday";
-            if(mSat && mSun){
-                whenRing = "Everyday";
-            }
-        }else if(mSat && mSun){
-            whenRing = "Weekend";
+    public String SnoozeForText(){
+        String sft;
+        if(isSnooze()){
+            sft = "Snooze:On";
         }else{
-            String[] simpleday = new String[6];
-            if(mMon){simpleday[0] = "Mon";}
-            if(mTue){simpleday[1] = "Tue";}
-            if(mWed){simpleday[2] = "Wed";}
-            if(mThu){simpleday[3] = "Thu";}
-            if(mFri){simpleday[4] = "Fri";}
-            if(mFri){simpleday[5] = "Sat";}
-            if(mSun){simpleday[6] = "Sun";}
-
-            for(String sd : simpleday){
-                if(sd == null){
-                   continue;
-                }
-                if(sd == "Sun"){
-                    whenRing = "Sun";
-                }
-                whenRing = whenRing + sd + ",";
-            }
+            sft = "Snooze:Off";
         }
-
-        return whenRing;
+        return sft;
     }
-
 
     public boolean isMon() {
         return mMon;
@@ -143,13 +167,20 @@ public class AlarmItem {
         mSun = sun;
     }
 
-    public ImageView getImage() {
-        return mImage;
+    public String getImageFilePth() {
+        return mImageFilePath;
     }
 
-    public void setImage(ImageView image) {
-        mImage = image;
+    public void setImageFilePth(String imageFilePath) {
+        mImageFilePath = imageFilePath;
     }
 
+    public boolean isValid() {
+        return mValid;
+    }
+
+    public void setValid(boolean valid) {
+        mValid = valid;
+    }
 
 }
