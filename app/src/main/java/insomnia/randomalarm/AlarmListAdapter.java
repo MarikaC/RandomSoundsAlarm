@@ -4,44 +4,39 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by OwnerMC on 16/01/04.
  */
-public class AlarmListAdapter extends BaseAdapter {
+public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
 
-    Context context;
     LayoutInflater layoutInflater = null;
-    static List<AlarmItem> mainAlarmList = new ArrayList<>();
+    AlarmItem mAlarmItem;
 
     public AlarmListAdapter(Context context) {
-        this.context = context;
+        super(context,0);
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    //ListViewに表示したい数
-    @Override
-    public int getCount() {
-        return mainAlarmList.size();
-    }
+//    //ListViewに表示したい数
+//    @Override
+//    public int getCount() {
+//        return 10;
+//    }
 
-    //特に使わないのでnull
-    @Override
-    public Object getItem(int position) {
-        return mainAlarmList.get(position);
-    }
+//    @Override
+//    public Object getItem(int position) {
+//        return null;
+//    }
 
-    //特に使わないので0
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
+//    //特に使わないので0
+//    @Override
+//    public long getItemId(int position) {
+//        return 0;
+//    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -49,10 +44,10 @@ public class AlarmListAdapter extends BaseAdapter {
         convertView = layoutInflater.inflate(R.layout.alarm_item_row,parent,false);
         }
 
-        AlarmItem alarmItem = (AlarmItem)getItem(position);
+        AlarmItem alarmItem = getItem(position);
 
         TextView TriggerTime = (TextView) convertView.findViewById(R.id.itemTriggerTime);
-        TriggerTime.setText(alarmItem.TriggerTimeForText());
+        TriggerTime.setText(alarmItem.getTextTriggerTime());
 
         TextView Label = (TextView) convertView.findViewById(R.id.itemLabel);
         Label.setText(alarmItem.getLabel());

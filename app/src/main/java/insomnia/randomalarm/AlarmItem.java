@@ -6,6 +6,7 @@ package insomnia.randomalarm;
 public class AlarmItem {
 
     private long mTriggerTime;
+    private String mtextTriggerTime;
     private String mLabel;
     private boolean mSnooze;
     private boolean mMon,mTue,mWed,mThu,mFri,mSat,mSun = false;
@@ -16,9 +17,11 @@ public class AlarmItem {
     /**
      * Constructor
      */
-    public AlarmItem(long triggerTime, String label, boolean snooze, boolean mon, boolean tue,
+    //Create new alarmitem
+    public AlarmItem(long triggerTime,String textTriggerTime, String label, boolean snooze, boolean mon, boolean tue,
                      boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, String imageFilePath) {
         mTriggerTime = triggerTime;
+        mtextTriggerTime = textTriggerTime;
         mLabel = label;
         mSnooze = snooze;
         mMon = mon;
@@ -31,13 +34,30 @@ public class AlarmItem {
         mImageFilePath = imageFilePath;
         mWhenRing = setWhenRing();
     }
-    //public  AlarmItem(){}
-
+    //For addAlarmItemFromDB
+    public AlarmItem(long triggerTime,String textTriggerTime, String label, boolean snooze, boolean mon, boolean tue,
+         boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, String imageFilePath, String whenRing, boolean valid) {
+        mTriggerTime = triggerTime;
+        mtextTriggerTime = textTriggerTime;
+        mLabel = label;
+        mSnooze = snooze;
+        mMon = mon;
+        mTue = tue;
+        mWed = wed;
+        mThu = thu;
+        mFri = fri;
+        mSat = sat;
+        mSun = sun;
+        mImageFilePath = imageFilePath;
+        mWhenRing = whenRing;
+        mValid = valid;
+    }
 
     public  String getWhenRing(){
         return mWhenRing;
     }
 
+    // TODO: 16/01/27 Throw exception When set as "nothing"
     public String setWhenRing(){
         if(mMon && mTue && mWed && mThu && mFri){
             mWhenRing = "Weekday";
@@ -79,10 +99,12 @@ public class AlarmItem {
         mTriggerTime = triggerTime;
     }
 
-    public String TriggerTimeForText(){
-        String ttft = String.valueOf(mTriggerTime);//??ww
-        //longをStringへ変換する処理
-        return ttft;
+    public String getTextTriggerTime() {
+        return mtextTriggerTime;
+    }
+
+    public void setTextTriggerTime(String textTriggerTime) {
+        mtextTriggerTime = textTriggerTime;
     }
 
     public String getLabel() {

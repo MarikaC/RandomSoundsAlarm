@@ -5,31 +5,39 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    static List<AlarmItem> mainAlarmList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ListView MainAlarmListView = (ListView)findViewById(R.id.MainAlarmList);
-        //ArrayList<AlarmItem> alarmlist = new ArrayList<>();
-        AlarmListAdapter adapter = new AlarmListAdapter(getApplicationContext());
-
-        /* TODO: 16/01/21
-        SQlite call to data
-        set Alarm data
-        */
-
-        //ex)
-        AlarmItem mainListItem = new AlarmItem(12345678,"Good Morning!!Wake Up!!",true,
-                true,true,true,true,true,false,false,"/imagefile/path");
-        //*ArrayAdapterなのでaddをforで回して既存のAlarmItemを全てset
-
-        // /adapter.mainAlarmList.add(mainListItem);
-        MainAlarmListView.setAdapter(adapter);
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ListView MainAlarmListView = (ListView)findViewById(R.id.MainAlarmList);
+
+        AlarmListDao helper = new AlarmListDao(getApplicationContext());
+        helper.addAlarmItemFromDB(mainAlarmList);
+        if(mainAlarmList != null){
+            AlarmListAdapter adapter = new AlarmListAdapter(getApplicationContext());
+            for(AlarmItem item : mainAlarmList){
+                adapter.add(item);
+            }
+            MainAlarmListView.setAdapter(adapter);
+        }else if(mainAlarmList == null){
+            Toast.makeText(this,"Hello!!",Toast.LENGTH_LONG).show();
+        }
+        helper.close();
+    }
+
 
     public void addButtonOnClick(View view){
         Intent intent = new Intent();

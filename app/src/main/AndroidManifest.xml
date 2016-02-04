@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="insomnia.randomalarm" >
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,15 @@
         </activity>
         <activity android:name=".AlarmSettingActivity" >
         </activity>
+
+        <receiver android:name=".MyAlarmReceiver" >
+            <intent-filter>
+                <action android:name="MyAlarmAction"></action>
+            </intent-filter>
+        </receiver>
+
+        <service android:name="MyAlarmService" ></service>
+        <activity android:name=".WakeUpActivity"></activity>
     </application>
 
 </manifest>

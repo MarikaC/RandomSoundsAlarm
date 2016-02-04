@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Images.Media;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.util.Calendar;
 
 
 public class AlarmSettingActivity extends AppCompatActivity {
@@ -95,26 +97,49 @@ public class AlarmSettingActivity extends AppCompatActivity {
      * AlarmListにlabel,whenRing,validを記録
      */
     public void CreateButtonOnClick(View view){
-        //alarmの時間って型は何で指定するの？
-        /*→milliseconds
+        /*
         timepickerの時間をmilliに変換してcalenderクラスの時間に変換してからsetする
          */
-        MyAlarmManager AlarmManager = new MyAlarmManager();
-        long triggertime = AlarmManager.ConvertTriggerTimeMilli(timePicker);
-        AlarmItem alarmItem = new AlarmItem(triggertime,label.getText().toString(),snooze.isChecked(),
+        long triggertime = ConvertTriggerTimeMilli(timePicker);
+        String textTriggerTime = ParseTimepickerToString(timePicker);
+
+        AlarmItem alarmItem = new AlarmItem(triggertime, textTriggerTime,
+                label.getText().toString(),snooze.isChecked(),
                 Mon.isChecked(),Tue.isChecked(),Wed.isChecked(),Thu.isChecked(),Fri.isChecked(),
                 Sat.isChecked(),Sun.isChecked(),ImageFilePath);
 
-//        List<AlarmItem> AlarmItemList = null;
-//        AlarmItemList.add(alarmItem);
-        //本当はここにDBのalarmItemをaddする処理が入る
+        AlarmListDao helper = new AlarmListDao(getApplicationContext());
+        helper.insertAlarmItem(alarmItem);
+        helper.close();
 
-        AlarmListAdapter adapter = new AlarmListAdapter(getApplicationContext());
-        adapter.mainAlarmList.add(alarmItem);
         Intent intent = new Intent(this,MainActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT | intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
         startActivity(intent);
+
         finish();
+        Log.d("++++++++++++++++++", "INSERT COMPLETE");
+    }
+
+    public long ConvertTriggerTimeMilli(TimePicker timePicker){
+        Calendar cal = Calendar.getInstance();
+        int h = timePicker.getCurrentHour().intValue();
+        int m = timePicker.getCurrentMinute().intValue();
+        cal.set(Calendar.HOUR_OF_DAY, h);
+        cal.set(Calendar.MINUTE, m);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        long triggertime = cal.getTimeInMillis();
+        return triggertime;
+    }
+
+    public String ParseTimepickerToString(TimePicker timePicker){
+        int h = timePicker.getCurrentHour().intValue();
+        int m = timePicker.getCurrentMinute().intValue();
+        String hour = String.valueOf(h);
+        String minute = String.valueOf(m);
+        if(hour.length() == 1){hour = "0" + hour;}
+        if(minute.length() == 1){minute = "0" + minute;}
+        return hour + ":" + minute;
     }
 
 }

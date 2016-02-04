@@ -12,17 +12,30 @@
         android:id="@+id/itemTriggerTime"
         android:layout_above="@+id/itemWhenring"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:textColor="#000000"/>
+
+    <Space
+        android:layout_width="30px"
+        android:layout_height="match_parent"
+        android:id="@+id/space"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/itemTriggerTime"
+        android:layout_toLeftOf="@+id/itemLabel"
+        android:layout_toRightOf="@+id/itemTriggerTime"
+        android:layout_toEndOf="@+id/itemTriggerTime"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Label"
         android:id="@+id/itemLabel"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/itemSnooze"
-        android:layout_toEndOf="@+id/itemSnooze"/>
+        android:layout_toRightOf="@+id/itemTriggerTime"
+        android:layout_toEndOf="@+id/itemTriggerTime"
+        android:textColor="#717d83"/>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,8 +54,8 @@
         android:text="Snooze"
         android:id="@+id/itemSnooze"
         android:layout_below="@+id/itemLabel"
-        android:layout_toRightOf="@+id/itemTriggerTime"
-        android:layout_toEndOf="@+id/itemTriggerTime"/>
+        android:layout_toRightOf="@+id/itemWhenring"
+        android:layout_toEndOf="@+id/itemWhenring"/>
 
     <Switch
         android:layout_width="wrap_content"
