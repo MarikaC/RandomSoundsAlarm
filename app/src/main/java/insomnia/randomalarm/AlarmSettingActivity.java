@@ -23,7 +23,6 @@ import java.util.Calendar;
 
 public class AlarmSettingActivity extends AppCompatActivity {
     private static final int REQUEST_GALLERY = 0;
-    //AlarmItem mAlarmItem = new AlarmItem();
     TimePicker timePicker;
     EditText label;
     Switch snooze;
@@ -97,9 +96,7 @@ public class AlarmSettingActivity extends AppCompatActivity {
      * AlarmListにlabel,whenRing,validを記録
      */
     public void CreateButtonOnClick(View view){
-        /*
-        timepickerの時間をmilliに変換してcalenderクラスの時間に変換してからsetする
-         */
+
         long triggertime = ConvertTriggerTimeMilli(timePicker);
         String textTriggerTime = ParseTimepickerToString(timePicker);
 
@@ -109,15 +106,19 @@ public class AlarmSettingActivity extends AppCompatActivity {
                 Sat.isChecked(),Sun.isChecked(),ImageFilePath);
 
         AlarmListDao helper = new AlarmListDao(getApplicationContext());
-        helper.insertAlarmItem(alarmItem);
+
+        if (helper.insertAlarmItem(alarmItem) == -1) {
+            Toast.makeText(this, "Insert失敗", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Insert成功", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this,MainActivity.class);
+            intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT | intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+            startActivity(intent);
+            finish();
+        }
+        Log.d("++++++++++++++++++", "INSERT COMPLETE");
         helper.close();
 
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT | intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-        startActivity(intent);
-
-        finish();
-        Log.d("++++++++++++++++++", "INSERT COMPLETE");
     }
 
     public long ConvertTriggerTimeMilli(TimePicker timePicker){

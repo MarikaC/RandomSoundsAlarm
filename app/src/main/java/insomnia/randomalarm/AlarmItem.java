@@ -36,7 +36,7 @@ public class AlarmItem {
     }
     //For addAlarmItemFromDB
     public AlarmItem(long triggerTime,String textTriggerTime, String label, boolean snooze, boolean mon, boolean tue,
-         boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, String imageFilePath, String whenRing, boolean valid) {
+         boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, String whenRing, String imageFilePath,boolean valid) {
         mTriggerTime = triggerTime;
         mtextTriggerTime = textTriggerTime;
         mLabel = label;
@@ -48,8 +48,8 @@ public class AlarmItem {
         mFri = fri;
         mSat = sat;
         mSun = sun;
-        mImageFilePath = imageFilePath;
         mWhenRing = whenRing;
+        mImageFilePath = imageFilePath;
         mValid = valid;
     }
 

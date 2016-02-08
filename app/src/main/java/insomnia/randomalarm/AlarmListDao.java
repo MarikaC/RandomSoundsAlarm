@@ -17,6 +17,7 @@ public class AlarmListDao extends SQLiteOpenHelper{
     private SQLiteDatabase alarm_info;
     static final String DB = "alarm_info.db";
     static final int DB_VERSION = 1;
+    static final String TABLE = "alarm_list";
     static final String CREATE_TABLE = "create table alarm_list (" +
                                             "ID              integer  primary key autoincrement," +
                                             "TriggerTime     integer  not null," +
@@ -50,38 +51,44 @@ public class AlarmListDao extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    public void insertAlarmItem(AlarmItem alarmItem){
+    public long insertAlarmItem(AlarmItem alarmItem){
         alarm_info = getWritableDatabase();
+        long ret = 0;
 
-        ContentValues values = new ContentValues();
-        values.put("TriggerTime",alarmItem.getTriggerTime());
-        values.put("textTriggerTime", alarmItem.getTextTriggerTime());
-        values.put("Label",alarmItem.getLabel());
-        values.put("Snooze",alarmItem.isSnooze());
-        values.put("Mon",alarmItem.isMon());
-        values.put("Tue",alarmItem.isTue());
-        values.put("Wed",alarmItem.isWed());
-        values.put("Thu",alarmItem.isThu());
-        values.put("Fri",alarmItem.isFri());
-        values.put("Sat",alarmItem.isSat());
-        values.put("Sun",alarmItem.isSun());
-        values.put("WhenRing",alarmItem.getWhenRing());
-        values.put("ImageFilePath",alarmItem.getImageFilePth());
-        values.put("Valid", alarmItem.isValid());
+        if(TABLE == alarm_info.findEditTable(TABLE)) {
+            Log.d("TABLE NAME IS",alarm_info.findEditTable(TABLE));
 
-        alarm_info.insert("alarm_list", null, values);
-        values.clear();
+            ContentValues values = new ContentValues();
+            values.put("TriggerTime", alarmItem.getTriggerTime());
+            values.put("textTriggerTime", alarmItem.getTextTriggerTime());
+            values.put("Label", alarmItem.getLabel());
+            values.put("Snooze", alarmItem.isSnooze());
+            values.put("Mon", alarmItem.isMon());
+            values.put("Tue", alarmItem.isTue());
+            values.put("Wed", alarmItem.isWed());
+            values.put("Thu", alarmItem.isThu());
+            values.put("Fri", alarmItem.isFri());
+            values.put("Sat", alarmItem.isSat());
+            values.put("Sun", alarmItem.isSun());
+            values.put("WhenRing", alarmItem.getWhenRing());
+            values.put("ImageFilePath", alarmItem.getImageFilePth());
+            values.put("Valid", alarmItem.isValid());
 
-        alarm_info.close();
+            ret = alarm_info.insert(TABLE, null, values);
+
+            values.clear();
+
+            alarm_info.close();
+            Log.d("ret VALUE IS",String.valueOf(ret));
+        }
+        return ret;
     }
 
     public List addAlarmItemFromDB(List mainAlarmList){
-//        String SELECT_ALL_ALARMLIST  = "SELECT TriggerTime, textTriggerTime, Label, Snooze," +
-//                "Mon, Tue, Wed, Thu, Fri, Sat, Sun, WhenRing, ImageFilePath, Valid FROM alarm_list";
-//
-        String SELECT_ALL_ALARMLIST = "SELECT * FROM alarm_list;";
+        alarm_info = getWritableDatabase();
         try {
-            Cursor cursor = alarm_info.rawQuery(SELECT_ALL_ALARMLIST, null);
+            Cursor cursor = alarm_info.rawQuery("SELECT * FROM alarm_list;",null);
+            cursor.moveToFirst();
 
             while (cursor.moveToNext()) {
                 AlarmItem alarmItem = new AlarmItem(

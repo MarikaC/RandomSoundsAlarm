@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static List<AlarmItem> mainAlarmList;
+    private ArrayList<AlarmItem> mainAlarmList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
