@@ -23,11 +23,11 @@ public class MyAlarmManager extends AlarmSettingActivity{
     public void addAlarm(AlarmItem alarmItem){
         // アラームを設定する
         mAlarmSender = this.getPendingIntent();
-//        // 過去だったら明日にする
-//        if(alarmItem.getTriggerTime() < System.currentTimeMillis()){
-//            long oneday = 86400000;
-//            alarmItem.setTriggerTime(alarmItem.getTriggerTime() + oneday);
-//        }
+        // 過去だったら明日にする
+        if(alarmItem.getTriggerTime() < System.currentTimeMillis()){
+            long oneday = 86400000;
+            alarmItem.setTriggerTime(alarmItem.getTriggerTime() + oneday);
+        }
         am.set(AlarmManager.RTC_WAKEUP, alarmItem.getTriggerTime(), mAlarmSender);
     }
 

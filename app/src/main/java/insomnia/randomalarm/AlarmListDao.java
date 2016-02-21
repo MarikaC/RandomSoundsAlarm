@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class AlarmListDao extends SQLiteOpenHelper{
     static final int DB_VERSION = 1;
     static final String TABLE = "alarm_list";
     static final String CREATE_TABLE = "create table alarm_list (" +
-                                            "ID              integer  primary key autoincrement," +
+                                            "ID              integer  primary key," +
                                             "TriggerTime     integer  not null," +
                                             "textTriggerTime text     not null," +
                                             "Label           text     not null," +
@@ -84,14 +85,14 @@ public class AlarmListDao extends SQLiteOpenHelper{
         return ret;
     }
 
-    public List addAlarmItemFromDB(List mainAlarmList){
+    public List addAlarmItemFromDB(){
         alarm_info = getWritableDatabase();
+        List mainAlarmList = new ArrayList<>();
         try {
             Cursor cursor = alarm_info.rawQuery("SELECT * FROM alarm_list;",null);
-            cursor.moveToFirst();
-
             while (cursor.moveToNext()) {
                 AlarmItem alarmItem = new AlarmItem(
+                        cursor.getInt(0),
                         (long) cursor.getInt(1),
                         cursor.getString(2),
                         cursor.getString(3),
@@ -108,11 +109,16 @@ public class AlarmListDao extends SQLiteOpenHelper{
                         ParseToBooleanForIntOfDB(cursor.getInt(14))
                 );
                 mainAlarmList.add(alarmItem);
+                alarmItem = null;
             }
         }catch (NullPointerException npe){
-            Log.d("***************", "error", new Throwable());
-            mainAlarmList = null; //case of DB is empty
+            Log.d("***************", "error:DB is empty!!");
+            mainAlarmList = null;
+        }catch (Exception e){
+            e.getMessage();
+            e.getStackTrace();
         }
+        alarm_info.close();
         return mainAlarmList;
     }
 
@@ -123,5 +129,24 @@ public class AlarmListDao extends SQLiteOpenHelper{
         }
         return b;
     }
+
+    public void deleteAlarmItem(int position, AlarmItem selectedItem){
+        Log.d("position", String.valueOf(position));
+        alarm_info = getWritableDatabase();
+        alarm_info.beginTransaction();
+        try {
+            //delete recode
+            alarm_info.delete(TABLE, "ID = " + selectedItem.getId(), null);
+            alarm_info.setTransactionSuccessful();
+        }catch (Exception e){
+            e.getMessage();
+            e.getStackTrace();
+        }finally {
+            alarm_info.endTransaction();
+            alarm_info.close();
+        }
+        Log.d("deleteAlarmItem:", "Complete !!");
+    }
+
 }
 

@@ -23,10 +23,12 @@ import java.util.Calendar;
 
 public class AlarmSettingActivity extends AppCompatActivity {
     private static final int REQUEST_GALLERY = 0;
+
     TimePicker timePicker;
     EditText label;
     Switch snooze;
     CheckBox Mon,Tue,Wed,Thu,Fri,Sat,Sun;
+    Bitmap bitmapImg;
     ImageView imgView;
     String ImageFilePath;
 
@@ -55,34 +57,57 @@ public class AlarmSettingActivity extends AppCompatActivity {
         //Intent#setTypeメソッドで, 画像全般("image/*")を指定する.
         //jpegに限定する場合は, "image/jpeg"と指定.
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_PICK);
         startActivityForResult(intent, REQUEST_GALLERY);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releaseBitmap(bitmapImg);
+        releaseImageView(imgView);
+        Log.d("Setting", "onDestroy");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK) {
             try {
                 //photodata取得後、bitmapへ変換
                 InputStream in = getContentResolver().openInputStream(data.getData());
-                Bitmap img = BitmapFactory.decodeStream(in);
+                bitmapImg = BitmapFactory.decodeStream(in);
                 in.close();
                 // 選択した画像を表示
-                imgView.setImageBitmap(img);
+                imgView.setImageBitmap(bitmapImg);
                 //filepath取得部分
                 ImageFilePath = getFilePath(data);
+                Log.d("ImageFilePath:",ImageFilePath);
                 Toast.makeText(this,ImageFilePath,Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(this, "Failure", Toast.LENGTH_SHORT).show();
+                Log.d("IMAGE VIEW","ImageFilePath:" + ImageFilePath, new Throwable());
             }
         }
 
     }
 
+    private void releaseBitmap(Bitmap bitmapImg){
+        if(bitmapImg != null){
+            bitmapImg.recycle();
+            bitmapImg = null;
+        }
+    }
+
+    private void releaseImageView(ImageView imageView){
+        if(imageView != null){
+            imageView.setImageBitmap(null);
+        }
+    }
+
     public String getFilePath(Intent data){
         Uri selectedImage = data.getData();
         String[] filePathColumn = { Media.DATA };
-        Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String picturePath = cursor.getString(columnIndex);
@@ -95,22 +120,27 @@ public class AlarmSettingActivity extends AppCompatActivity {
      * SQliteにalarmItemのfieldを記録
      * AlarmListにlabel,whenRing,validを記録
      */
-    public void CreateButtonOnClick(View view){
+    public void createButtonOnClick(View view){
 
         long triggertime = ConvertTriggerTimeMilli(timePicker);
         String textTriggerTime = ParseTimepickerToString(timePicker);
+        String slabel = label.getText().toString();
+        String parsedLabel = parseNewLineCharToSpace(slabel);
 
         AlarmItem alarmItem = new AlarmItem(triggertime, textTriggerTime,
-                label.getText().toString(),snooze.isChecked(),
+                parsedLabel,snooze.isChecked(),
                 Mon.isChecked(),Tue.isChecked(),Wed.isChecked(),Thu.isChecked(),Fri.isChecked(),
                 Sat.isChecked(),Sun.isChecked(),ImageFilePath);
 
         AlarmListDao helper = new AlarmListDao(getApplicationContext());
 
         if (helper.insertAlarmItem(alarmItem) == -1) {
-            Toast.makeText(this, "Insert失敗", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Insert失敗", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Insert成功", Toast.LENGTH_SHORT).show();
+            MyAlarmManager alarmManager = new MyAlarmManager(this);
+            alarmManager.addAlarm(alarmItem);
+
+            //Toast.makeText(this, "Insert成功", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this,MainActivity.class);
             intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT | intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
             startActivity(intent);
@@ -119,6 +149,12 @@ public class AlarmSettingActivity extends AppCompatActivity {
         Log.d("++++++++++++++++++", "INSERT COMPLETE");
         helper.close();
 
+    }
+
+    // TODO: 16/02/19  AlarmItemLabel:parseNewLineCharToSpace
+    public String parseNewLineCharToSpace(String slabel){
+        slabel.replace("¥n", " ");
+        return slabel;
     }
 
     public long ConvertTriggerTimeMilli(TimePicker timePicker){

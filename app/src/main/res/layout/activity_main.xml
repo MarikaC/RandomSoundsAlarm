@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="0pt"
@@ -13,51 +13,67 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:weightSum="1"
         android:background="@color/colorWhite">
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:weightSum="1"-->
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="383dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.97">
-
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/MainAlarmList"
-                android:layout_gravity="center"
-                android:textColor="@color/colorWhite" />
-        </FrameLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <ListView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_weight="1"
+            android:id="@+id/MainAlarmList"
+            android:layout_gravity="center"
+            android:textColor="@color/colorWhite" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!--<android.support.design.widget.FloatingActionButton-->
+                <!--android:id="@+id/addButton"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|end"-->
+                <!--android:layout_margin="@dimen/fab_margin"-->
+                <!--android:src="@drawable/add"/>-->
+
+            <!--<android.support.design.widget.FloatingActionButton-->
+                <!--android:id="@+id/soundButton"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|end"-->
+                <!--android:layout_margin="@dimen/fab_margin"-->
+                <!--android:src="@drawable/sound"/>-->
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_weight="1"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_toLeftOf="@+id/soundButton"
+                android:layout_alignParentBottom="true"
                 android:id="@+id/addButton"
                 android:background="@drawable/add"
-                android:onClick="addButtonOnClick"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/soundButton"
-                android:layout_toStartOf="@+id/soundButton" />
+                android:onClick="addButtonOnClick"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:id="@+id/soundButton"
                 android:background="@drawable/sound"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-        </RelativeLayout>
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
 
     </LinearLayout>
 
-</RelativeLayout>
+
+</LinearLayout>

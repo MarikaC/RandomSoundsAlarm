@@ -14,11 +14,15 @@ import android.widget.TextView;
 public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
 
     LayoutInflater layoutInflater = null;
-    AlarmItem mAlarmItem;
 
     public AlarmListAdapter(Context context) {
         super(context,0);
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return super.isEnabled(position);
     }
 
 //    //ListViewに表示したい数
@@ -46,20 +50,20 @@ public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
 
         AlarmItem alarmItem = getItem(position);
 
-        TextView TriggerTime = (TextView) convertView.findViewById(R.id.itemTriggerTime);
-        TriggerTime.setText(alarmItem.getTextTriggerTime());
+        TextView triggerTime = (TextView) convertView.findViewById(R.id.itemTriggerTime);
+        triggerTime.setText(alarmItem.getTextTriggerTime());
 
-        TextView Label = (TextView) convertView.findViewById(R.id.itemLabel);
-        Label.setText(alarmItem.getLabel());
+        TextView label = (TextView) convertView.findViewById(R.id.itemLabel);
+        label.setText(alarmItem.getLabel());
 
-        TextView WhenRing = (TextView) convertView.findViewById(R.id.itemWhenring);
-        WhenRing.setText(alarmItem.getWhenRing());
+        TextView whenRing = (TextView) convertView.findViewById(R.id.itemWhenring);
+        whenRing.setText(alarmItem.getWhenRing());
 
-        TextView Snooze = (TextView) convertView.findViewById(R.id.itemSnooze);
-        Snooze.setText(alarmItem.SnoozeForText());
+        TextView snooze = (TextView) convertView.findViewById(R.id.itemSnooze);
+        snooze.setText(alarmItem.SnoozeForText());
 
-        Switch Valid = (Switch) convertView.findViewById(R.id.itemSwitch);
-        Valid.setChecked(alarmItem.isValid());
+        Switch valid = (Switch) convertView.findViewById(R.id.itemSwitch);
+        valid.setChecked(alarmItem.isValid());
 
         return convertView;
     }

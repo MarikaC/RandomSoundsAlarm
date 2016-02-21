@@ -7,129 +7,113 @@
     tools:context="insomnia.randomalarm.AlarmSettingActivity"
     android:weightSum="1">
 
-
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="443dp"
-        android:layout_weight="1.08"
-        android:backgroundTintMode="src_over"
-        android:background="#ffffff">
-
-        <android.inputmethodservice.ExtractEditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="label"
-            android:id="@+id/sLabel"
-            android:layout_centerVertical="true"
-            android:layout_alignLeft="@+id/sSnoozeSwitch"
-            android:layout_alignStart="@+id/sSnoozeSwitch" />
-
-        <Switch
-            android:layout_width="362dp"
-            android:layout_height="50dp"
-            android:text="Snooze"
-            android:id="@+id/sSnoozeSwitch"
-            android:layout_below="@+id/sLabel"
-            android:layout_centerHorizontal="true" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mon"
-            android:id="@+id/sMonCheckBox"
-            android:layout_below="@+id/sSnoozeSwitch"
-            android:layout_alignLeft="@+id/sSnoozeSwitch"
-            android:layout_alignStart="@+id/sSnoozeSwitch" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tue"
-            android:id="@+id/sTueCheckBox"
-            android:layout_toRightOf="@+id/sMonCheckBox"
-            android:layout_toEndOf="@+id/sMonCheckBox"
-            android:layout_below="@+id/sSnoozeSwitch" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wed"
-            android:id="@+id/sWedCheckBox"
-            android:layout_alignTop="@+id/sTueCheckBox"
-            android:layout_toRightOf="@+id/sTueCheckBox"
-            android:layout_toEndOf="@+id/sTueCheckBox" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thu"
-            android:id="@+id/sThuCheckBox"
-            android:layout_alignTop="@+id/sWedCheckBox"
-            android:layout_toRightOf="@+id/sWedCheckBox"
-            android:layout_toEndOf="@+id/sWedCheckBox" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fri"
-            android:id="@+id/sFriCheckBox"
-            android:layout_alignTop="@+id/sThuCheckBox"
-            android:layout_toRightOf="@+id/sThuCheckBox"
-            android:layout_toEndOf="@+id/sThuCheckBox" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sat"
-            android:id="@+id/sSatCheckBox"
-            android:layout_below="@+id/sMonCheckBox"
-            android:layout_alignLeft="@+id/sMonCheckBox"
-            android:layout_alignStart="@+id/sMonCheckBox" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sun"
-            android:id="@+id/sSunCheckBox"
-            android:layout_alignTop="@+id/sSatCheckBox"
-            android:layout_toLeftOf="@+id/sWedCheckBox"
-            android:layout_toStartOf="@+id/sWedCheckBox" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin">
 
         <TimePicker
             android:timePickerMode="spinner"
             android:numbersInnerTextColor="@color/colorWhite"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/sTimePicker"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/sTimePicker"/>
 
-        <Button
-            android:layout_width="wrap_content"
+        <EditText
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="photo"
-            android:id="@+id/sPhotoButton"
-            android:background="#769efb"
-            android:layout_below="@+id/sSatCheckBox"
-            android:layout_alignLeft="@+id/sSatCheckBox"
-            android:layout_alignStart="@+id/sSatCheckBox"
-            android:onClick="PhotoButtonOnClick"
-            android:nestedScrollingEnabled="false" />
+            android:hint="label"
+            android:id="@+id/sLabel"/>
 
-        <ImageView
+        <Switch
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:text="Snooze"
+            android:id="@+id/sSnoozeSwitch"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sPhotoImageView"
-            android:layout_toRightOf="@+id/sFriCheckBox"
-            android:layout_alignBottom="@+id/sPhotoButton"
-            android:layout_below="@+id/sFriCheckBox"
-            android:layout_alignRight="@+id/sSnoozeSwitch"
-            android:layout_alignEnd="@+id/sSnoozeSwitch"
-            android:background="#e0f9fe"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true" />
+            android:layout_height="wrap_content">
 
-    </RelativeLayout>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mon"
+                android:id="@+id/sMonCheckBox"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tue"
+                android:id="@+id/sTueCheckBox"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wed"
+                android:id="@+id/sWedCheckBox"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thu"
+                android:id="@+id/sThuCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fri"
+                android:id="@+id/sFriCheckBox" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sat"
+                android:id="@+id/sSatCheckBox" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sun"
+                android:id="@+id/sSunCheckBox" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="photo"
+                android:id="@+id/sPhotoButton"
+                android:background="#769efb"
+                android:onClick="PhotoButtonOnClick"
+                android:nestedScrollingEnabled="false" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="@dimen/settings_imageView_Width_Height"
+                android:layout_height="@dimen/settings_imageView_Width_Height"
+                android:id="@+id/sPhotoImageView"
+                android:background="#e0f9fe"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
@@ -137,11 +121,6 @@
         android:text="Create!!"
         android:id="@+id/sCreateButton"
         android:background="#72f8cb"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/sSnoozeSwitch"
-        android:layout_alignStart="@+id/sSnoozeSwitch"
-        android:layout_alignRight="@+id/sSnoozeSwitch"
-        android:layout_alignEnd="@+id/sSnoozeSwitch"
-        android:onClick="CreateButtonOnClick" />
+        android:onClick="createButtonOnClick" />
 
 </LinearLayout>

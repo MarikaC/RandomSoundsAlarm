@@ -5,6 +5,7 @@ package insomnia.randomalarm;
  */
 public class AlarmItem {
 
+    private int mId;
     private long mTriggerTime;
     private String mtextTriggerTime;
     private String mLabel;
@@ -35,8 +36,9 @@ public class AlarmItem {
         mWhenRing = setWhenRing();
     }
     //For addAlarmItemFromDB
-    public AlarmItem(long triggerTime,String textTriggerTime, String label, boolean snooze, boolean mon, boolean tue,
+    public AlarmItem(int id, long triggerTime,String textTriggerTime, String label, boolean snooze, boolean mon, boolean tue,
          boolean wed, boolean thu, boolean fri, boolean sat, boolean sun, String whenRing, String imageFilePath,boolean valid) {
+        mId = id;
         mTriggerTime = triggerTime;
         mtextTriggerTime = textTriggerTime;
         mLabel = label;
@@ -54,6 +56,7 @@ public class AlarmItem {
     }
 
     public  String getWhenRing(){
+        mWhenRing = setWhenRing();
         return mWhenRing;
     }
 
@@ -68,27 +71,32 @@ public class AlarmItem {
             mWhenRing = "Weekend";
         }else{
             String[] simpleday = new String[6];
-            if(mMon){simpleday[0] = "Mon";}
-            if(mTue){simpleday[1] = "Tue";}
-            if(mWed){simpleday[2] = "Wed";}
-            if(mThu){simpleday[3] = "Thu";}
-            if(mFri){simpleday[4] = "Fri";}
-            if(mFri){simpleday[5] = "Sat";}
-            if(mSun){simpleday[6] = "Sun";}
+            if(mMon){simpleday[0] = "Mon ";}
+            if(mTue){simpleday[1] = "Tue ";}
+            if(mWed){simpleday[2] = "Wed ";}
+            if(mThu){simpleday[3] = "Thu ";}
+            if(mFri){simpleday[4] = "Fri ";}
+            if(mFri){simpleday[5] = "Sat ";}
+            if(mSun){simpleday[6] = "Sun ";}
 
+            StringBuilder buildWhen = new StringBuilder();
             for(String sd : simpleday){
-                if(sd == null){
-                    continue;
+                if(sd != null){
+                    buildWhen.append(sd);
                 }
-                if(sd == "Sun"){
-                    mWhenRing = "Sun";
-                    break;
-                }
-                mWhenRing = mWhenRing + sd + ",";
             }
+            mWhenRing = buildWhen.toString();
         }
 
         return mWhenRing;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
     }
 
     public long getTriggerTime() {
