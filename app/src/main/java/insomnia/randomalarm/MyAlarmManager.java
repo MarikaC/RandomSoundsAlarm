@@ -8,7 +8,7 @@ import android.content.Intent;
 /**
  * Created by OwnerMC on 16/01/18.
  */
-public class MyAlarmManager extends AlarmSettingActivity{
+public class MyAlarmManager {
     Context context;
     AlarmManager am;
     private PendingIntent mAlarmSender;
@@ -31,12 +31,7 @@ public class MyAlarmManager extends AlarmSettingActivity{
         am.set(AlarmManager.RTC_WAKEUP, alarmItem.getTriggerTime(), mAlarmSender);
     }
 
-    public void StopAlarmAtOnetime() {
-        // アラームのキャンセル
-        am.cancel(mAlarmSender);
-    }
-
-    public void StopSnooze() {
+    public void stopSnooze() {
         // snoozeのキャンセル
         am.cancel(mAlarmSender);
     }
