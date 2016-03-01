@@ -70,7 +70,8 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:id="@+id/soundButton"
                 android:background="@drawable/sound"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:onClick="soundButtonOnClick"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void soundButtonOnClick(View view){
-
+        Intent intent = new Intent();
+        intent.setClassName("insomnia.randomalarm","insomnia.randomalarm.ChooseSoundActivity");
+        startActivity(intent);
     }
 }

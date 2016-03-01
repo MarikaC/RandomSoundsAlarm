@@ -114,7 +114,7 @@ public class WakeUpActivity extends Activity{
         mMediaPlayer.start();
     }
 
-    
+
     @Override
     public void finish() {
         super.finish();
