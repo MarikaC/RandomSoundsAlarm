@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RandomAlarm</string>
+    <string name="app_name">RandomSoundsAlarm</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_choose_sound">ChooseSoundActivity</string>
 

@@ -1,4 +1,4 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 import android.content.Context;
 import android.view.LayoutInflater;

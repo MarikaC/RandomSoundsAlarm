@@ -1,4 +1,4 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

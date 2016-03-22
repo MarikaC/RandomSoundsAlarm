@@ -1,9 +1,10 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<AlarmItem> mainAlarmList;
     private ListView mainAlarmListView;
-    private AlarmListDao helper;
+    private MySQLiteOpenHelper helper;
     private AlarmListAdapter adapter;
 
     @Override
@@ -25,13 +26,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainAlarmListView = (ListView)findViewById(R.id.MainAlarmList);
         mainAlarmListView.setOnItemLongClickListener(mainAlarmListViewOnItemLongClickListener);
+
+        FloatingActionButton addButton = (FloatingActionButton)findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClassName("insomnia.randomsoundsalarm", "insomnia.randomsoundsalarm.AlarmSettingActivity");
+                startActivity(intent);
+            }
+        });
+
+        FloatingActionButton soundButton = (FloatingActionButton)findViewById(R.id.soundButton);
+        soundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClassName("insomnia.randomsoundsalarm", "insomnia.randomsoundsalarm.ChooseSoundActivity");
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void onResume(){
         super.onResume();
 
-        helper = new AlarmListDao(getApplicationContext());
+        helper = new MySQLiteOpenHelper(getApplicationContext());
         mainAlarmList = helper.addAlarmItemFromDB();
         if(mainAlarmList != null){
             adapter = new AlarmListAdapter(getApplicationContext());
@@ -68,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AlarmListAdapter adapter = (AlarmListAdapter)list.getAdapter();
+                AlarmListAdapter adapter = (AlarmListAdapter) list.getAdapter();
                 adapter.remove(selectedItem);
                 adapter.notifyDataSetChanged();
 
-                AlarmListDao helper = new AlarmListDao(getApplicationContext());
+                MySQLiteOpenHelper helper = new MySQLiteOpenHelper(getApplicationContext());
                 helper.deleteAlarmItem(position, selectedItem);
                 helper.close();
             }
@@ -96,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mainAlarmList = null;
-        releaseListView(mainAlarmListView,adapter);
+        releaseListView(mainAlarmListView, adapter);
     }
 
     private void releaseListView(ListView mainAlarmListView, AlarmListAdapter adapter){
@@ -108,18 +129,5 @@ public class MainActivity extends AppCompatActivity {
             adapter.clear();
             adapter = null;
         }
-    }
-
-
-    public void addButtonOnClick(View view){
-        Intent intent = new Intent();
-        intent.setClassName("insomnia.randomalarm", "insomnia.randomalarm.AlarmSettingActivity");
-        startActivity(intent);
-    }
-
-    public void soundButtonOnClick(View view){
-        Intent intent = new Intent();
-        intent.setClassName("insomnia.randomalarm","insomnia.randomalarm.ChooseSoundActivity");
-        startActivity(intent);
     }
 }

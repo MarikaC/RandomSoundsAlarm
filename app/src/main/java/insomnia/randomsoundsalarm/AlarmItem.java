@@ -1,4 +1,4 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 /**
  * Created by OwnerMC on 16/01/04.
@@ -61,6 +61,7 @@ public class AlarmItem {
     }
 
     // TODO: 16/01/27 Throw exception When set as "nothing"
+    // TODO: 16/03/07 Exception When choose Sun or Sat and Mon ~ Fri
     public String setWhenRing(){
         if(mMon && mTue && mWed && mThu && mFri){
             mWhenRing = "Weekday";

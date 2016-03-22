@@ -1,4 +1,4 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by OwnerMC on 16/02/28.
@@ -24,6 +23,15 @@ public class Sound {
     private Uri uri;
     private long duration;
     private int albumNo;
+    private boolean valid = false;
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
 
     public static final String[] COLUMNS = {
         MediaStore.Audio.Media._ID,
@@ -50,11 +58,12 @@ public class Sound {
         uri = ContentUris.withAppendedId(MediaStore.Audio.Media.INTERNAL_CONTENT_URI,id);
     }
 
-    public static List getItems(Context activity){
-        List tracks = new ArrayList();
+    public static ArrayList<Sound> getItems(Context activity){
+        ArrayList<Sound> tracks = new ArrayList();
+        String sortOrder = "artist";
         ContentResolver resolver = activity.getContentResolver();
         Cursor cursor = resolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,Sound.COLUMNS,null,null,null);
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,Sound.COLUMNS,null,null,sortOrder);
         while (cursor.moveToNext()) {
             if (cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)) < 3000) {
                 continue;

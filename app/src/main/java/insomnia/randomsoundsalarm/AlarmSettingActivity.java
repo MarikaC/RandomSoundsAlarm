@@ -1,4 +1,4 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -132,7 +132,7 @@ public class AlarmSettingActivity extends AppCompatActivity {
                 Mon.isChecked(),Tue.isChecked(),Wed.isChecked(),Thu.isChecked(),Fri.isChecked(),
                 Sat.isChecked(),Sun.isChecked(),ImageFilePath);
 
-        AlarmListDao helper = new AlarmListDao(getApplicationContext());
+        MySQLiteOpenHelper helper = new MySQLiteOpenHelper(getApplicationContext());
 
         if (helper.insertAlarmItem(alarmItem) == -1) {
             //Toast.makeText(this, "Insert失敗", Toast.LENGTH_SHORT).show();
@@ -141,7 +141,7 @@ public class AlarmSettingActivity extends AppCompatActivity {
             alarmManager.addAlarm(alarmItem);
 
             //Toast.makeText(this, "Insert成功", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this,MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT | intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
             startActivity(intent);
             finish();

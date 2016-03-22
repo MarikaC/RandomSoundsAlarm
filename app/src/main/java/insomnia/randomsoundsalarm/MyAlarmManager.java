@@ -1,4 +1,4 @@
-package insomnia.randomalarm;
+package insomnia.randomsoundsalarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
