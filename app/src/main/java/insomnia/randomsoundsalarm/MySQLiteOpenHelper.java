@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         alarm_info = getWritableDatabase();
         List mainAlarmList = new ArrayList<>();
         try {
-            Cursor cursor = alarm_info.rawQuery("SELECT * FROM alarm_list;",null);
+            Cursor cursor = alarm_info.rawQuery("SELECT * FROM "+TABLE_ALARM+";",null);
             while (cursor.moveToNext()) {
                 AlarmItem alarmItem = new AlarmItem(
                         cursor.getInt(0),
@@ -188,7 +189,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
     public ArrayList setCheckedSoundStatus(ArrayList<Sound> soundList){
         alarm_info = getReadableDatabase();
         try{
-            Cursor cursor = alarm_info.rawQuery("SELECT * FROM sound_list;",null);
+            Cursor cursor = alarm_info.rawQuery("SELECT * FROM "+TABLE_SOUND+";",null);
             long recodeCount = DatabaseUtils.queryNumEntries(alarm_info, TABLE_SOUND);
             if(recodeCount == 0){
                 Log.d("setCheckedSoundStatus", "recodeCount == 0");
@@ -215,6 +216,16 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         }
         alarm_info.close();
         return soundList;
+    }
+
+    public Uri getMediaUri(){
+        alarm_info = getReadableDatabase();
+        Cursor cursor = alarm_info.rawQuery("SELECT * FROM "+TABLE_SOUND+" ORDER BY RANDOM() LIMIT 1;", null);
+        cursor.moveToFirst();
+        Uri uri = Uri.parse(cursor.getString(3));
+        Log.d("cursor.getString(3)",cursor.getString(3));
+        alarm_info.close();
+        return uri;
     }
 
 }

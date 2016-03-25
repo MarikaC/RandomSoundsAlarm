@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -105,13 +106,18 @@ public class WakeUpActivity extends Activity{
         // 音を鳴らす
         if(mMediaPlayer != null) {
             mMediaPlayer.release();
-            mMediaPlayer = null;
+            mMediaPlayer = new MediaPlayer();
         }
-        // TODO: 16/01/27 DBから音楽をRandomで取得してstartする
-        // resのrawディレクトリにtest.mp3を置いてある場合
-        mMediaPlayer = MediaPlayer.create(this, R.raw.winter);
+        try {
+            MySQLiteOpenHelper helper = new MySQLiteOpenHelper(getApplicationContext());
+            mMediaPlayer.setDataSource(this, helper.getMediaUri());
+//            mMediaPlayer.setDataSource(this,Sound.getItems(this).get(0).getUri());
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        mMediaPlayer.setOnCompletionListener(soundLooper);
-        mMediaPlayer.start();
     }
 
 
