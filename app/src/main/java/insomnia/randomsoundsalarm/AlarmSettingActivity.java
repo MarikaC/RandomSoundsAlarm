@@ -112,6 +112,7 @@ public class AlarmSettingActivity extends AppCompatActivity {
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String picturePath = cursor.getString(columnIndex);
         cursor.close();
+        Log.d("picturePath",picturePath);
 
         return picturePath;
     }
@@ -137,7 +138,8 @@ public class AlarmSettingActivity extends AppCompatActivity {
         if (helper.insertAlarmItem(alarmItem) == -1) {
             //Toast.makeText(this, "Insert失敗", Toast.LENGTH_SHORT).show();
         } else {
-            MyAlarmManager alarmManager = new MyAlarmManager(this);
+            alarmItem = helper.getLastInsertAlarmItem(alarmItem);
+            MyAlarmManager alarmManager = new MyAlarmManager(getApplicationContext());
             alarmManager.addAlarm(alarmItem);
 
             //Toast.makeText(this, "Insert成功", Toast.LENGTH_SHORT).show();
@@ -148,7 +150,6 @@ public class AlarmSettingActivity extends AppCompatActivity {
         }
         Log.d("++++++++++++++++++", "INSERT COMPLETE");
         helper.close();
-
     }
 
     // TODO: 16/02/19  AlarmItemLabel:parseNewLineCharToSpace

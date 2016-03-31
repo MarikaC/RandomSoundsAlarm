@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
                                                     "mediaId       integer," +
                                                     "name          text     not null," +
                                                     "artistName    text,"              +
-                                                    "uri           uri      not null);";
+                                                    "path          text      not null);";
     static final String DROP_TABLE_ALARM = "drop table alarm_list;";
     static final String DROP_TABLE_SOUND = "drop table sound_list;";
 
@@ -83,7 +82,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
             values.put("Sat", alarmItem.isSat());
             values.put("Sun", alarmItem.isSun());
             values.put("WhenRing", alarmItem.getWhenRing());
-            values.put("ImageFilePath", alarmItem.getImageFilePth());
+            values.put("ImageFilePath", alarmItem.getImageFilePath());
             values.put("Valid", alarmItem.isValid());
 
             ret = alarm_info.insert(TABLE_ALARM, null, values);
@@ -94,6 +93,37 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
             Log.d("ret VALUE IS",String.valueOf(ret));
         }
         return ret;
+    }
+
+    public AlarmItem getLastInsertAlarmItem(AlarmItem alarmItem){
+        alarm_info = getReadableDatabase();
+        try{
+            Cursor cursor = alarm_info.rawQuery
+                    ("SELECT * FROM "+TABLE_ALARM+" WHERE ID=(SELECT max(ID) FROM "+TABLE_ALARM+");",null);
+            cursor.moveToFirst();
+            alarmItem = new AlarmItem(
+                    cursor.getInt(0),
+                    (long) cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    ParseToBooleanForIntOfDB(cursor.getInt(4)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(5)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(6)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(7)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(8)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(9)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(10)),
+                    ParseToBooleanForIntOfDB(cursor.getInt(11)),
+                    cursor.getString(12),
+                    cursor.getString(13),
+                    ParseToBooleanForIntOfDB(cursor.getInt(14))
+            );
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        alarm_info.close();
+        Log.d("alarmItem.getID()FROMDB",String.valueOf(alarmItem.getId()));
+        return alarmItem;
     }
 
     public List addAlarmItemFromDB(){
@@ -159,6 +189,16 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         Log.d("deleteAlarmItem:", "Complete !!");
     }
 
+    public void updateAlarmItem(AlarmItem alarmItem){
+        alarm_info = getWritableDatabase();
+
+        ContentValues values= new ContentValues();
+        values.put("Valid",alarmItem.isValid());
+        alarm_info.update(TABLE_ALARM, values, "ID=" + String.valueOf(alarmItem.getId()), null);
+
+        alarm_info.close();
+    }
+
     public void writeSoundListToDB(ArrayList<Sound> soundList){
         alarm_info = getWritableDatabase();
         long ret = 0;
@@ -177,7 +217,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
                 values.put("mediaId", sound.getId());
                 values.put("name", sound.getName());
                 values.put("artistName", sound.getArtistName());
-                values.put("uri", sound.getUri().toString());
+                values.put("path", sound.getPath());
                 ret = alarm_info.insert(TABLE_SOUND, null, values);
                 Log.d("INSERT ret VALUE IS", String.valueOf(ret));
                 values.clear();
@@ -218,14 +258,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         return soundList;
     }
 
-    public Uri getMediaUri(){
+    public String getMediaPath(){
         alarm_info = getReadableDatabase();
-        Cursor cursor = alarm_info.rawQuery("SELECT * FROM "+TABLE_SOUND+" ORDER BY RANDOM() LIMIT 1;", null);
+        Cursor cursor = alarm_info.rawQuery("SELECT * FROM " + TABLE_SOUND + " ORDER BY RANDOM() LIMIT 1;", null);
         cursor.moveToFirst();
-        Uri uri = Uri.parse(cursor.getString(3));
-        Log.d("cursor.getString(3)",cursor.getString(3));
+        String path = cursor.getString(3);
+        Log.d("path",path);
         alarm_info.close();
-        return uri;
+
+        return path;
     }
 
 }

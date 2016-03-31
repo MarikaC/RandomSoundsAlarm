@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
                 MySQLiteOpenHelper helper = new MySQLiteOpenHelper(getApplicationContext());
                 helper.deleteAlarmItem(position, selectedItem);
                 helper.close();
+
+                MyAlarmManager alarmManager = new MyAlarmManager(getApplicationContext());
+                alarmManager.cancelAlarm(selectedItem);
             }
         });
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

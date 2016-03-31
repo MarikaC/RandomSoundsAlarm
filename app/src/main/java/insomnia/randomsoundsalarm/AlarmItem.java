@@ -198,11 +198,11 @@ public class AlarmItem {
         mSun = sun;
     }
 
-    public String getImageFilePth() {
+    public String getImageFilePath() {
         return mImageFilePath;
     }
 
-    public void setImageFilePth(String imageFilePath) {
+    public void setImageFilePath(String imageFilePath) {
         mImageFilePath = imageFilePath;
     }
 

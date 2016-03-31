@@ -1,6 +1,7 @@
 package insomnia.randomsoundsalarm;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,12 @@ import android.widget.TextView;
 public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
 
     LayoutInflater layoutInflater = null;
+    Switch valid;
+    Context context;
 
     public AlarmListAdapter(Context context) {
         super(context,0);
+        this.context = context;
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -31,7 +35,7 @@ public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
         convertView = layoutInflater.inflate(R.layout.alarm_item_row,parent,false);
         }
 
-        AlarmItem alarmItem = getItem(position);
+        final AlarmItem alarmItem = getItem(position);
 
         TextView triggerTime = (TextView) convertView.findViewById(R.id.itemTriggerTime);
         triggerTime.setText(alarmItem.getTextTriggerTime());
@@ -45,8 +49,26 @@ public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
         TextView snooze = (TextView) convertView.findViewById(R.id.itemSnooze);
         snooze.setText(alarmItem.SnoozeForText());
 
-        Switch valid = (Switch) convertView.findViewById(R.id.itemSwitch);
+        valid = (Switch) convertView.findViewById(R.id.itemSwitch);
         valid.setChecked(alarmItem.isValid());
+        valid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("onClick", "SwitchClicked");
+                alarmItem.setValid(valid.isChecked());
+
+                MySQLiteOpenHelper helper = new MySQLiteOpenHelper(context);
+                helper.updateAlarmItem(alarmItem);
+
+                MyAlarmManager alarmManager = new MyAlarmManager(context);
+                if (alarmItem.isValid() == true) {
+                    alarmManager.addAlarm(alarmItem);
+                } else {
+                    Log.d("alarmManager","want to cancelAlarm"+alarmItem.getId());
+                    alarmManager.cancelAlarm(alarmItem);
+                }
+            }
+        });
 
         return convertView;
     }
