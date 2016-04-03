@@ -15,7 +15,6 @@ import android.widget.TextView;
 public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
 
     LayoutInflater layoutInflater = null;
-    Switch valid;
     Context context;
 
     public AlarmListAdapter(Context context) {
@@ -49,7 +48,7 @@ public class AlarmListAdapter extends ArrayAdapter<AlarmItem> {
         TextView snooze = (TextView) convertView.findViewById(R.id.itemSnooze);
         snooze.setText(alarmItem.SnoozeForText());
 
-        valid = (Switch) convertView.findViewById(R.id.itemSwitch);
+        final Switch valid = (Switch) convertView.findViewById(R.id.itemSwitch);
         valid.setChecked(alarmItem.isValid());
         valid.setOnClickListener(new View.OnClickListener() {
             @Override

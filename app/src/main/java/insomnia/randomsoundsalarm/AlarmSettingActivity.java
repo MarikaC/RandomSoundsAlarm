@@ -142,7 +142,6 @@ public class AlarmSettingActivity extends AppCompatActivity {
             MyAlarmManager alarmManager = new MyAlarmManager(getApplicationContext());
             alarmManager.addAlarm(alarmItem);
 
-            //Toast.makeText(this, "Insert成功", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(intent.FLAG_ACTIVITY_REORDER_TO_FRONT | intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
             startActivity(intent);

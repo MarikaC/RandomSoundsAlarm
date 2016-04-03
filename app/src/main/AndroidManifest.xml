@@ -27,13 +27,8 @@
         </activity>
 
         <receiver android:name=".MyAlarmReceiver"
-            >
-            <intent-filter>
-                <action android:name="MyAlarmAction" />
-            </intent-filter>
+            android:process=":remote">
         </receiver>
-
-        <service android:name=".MyAlarmService" />
 
         <activity
             android:name=".WakeUpActivity"

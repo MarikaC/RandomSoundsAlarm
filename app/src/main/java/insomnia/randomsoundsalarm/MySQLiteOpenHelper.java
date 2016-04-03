@@ -67,7 +67,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         long ret = 0;
 
         if(TABLE_ALARM == alarm_info.findEditTable(TABLE_ALARM)) {
-            Log.d("TABLE_SOUND NAME IS",alarm_info.findEditTable(TABLE_ALARM));
+            Log.d("TABLE_SOUND NAME IS", alarm_info.findEditTable(TABLE_ALARM));
 
             ContentValues values = new ContentValues();
             values.put("TriggerTime", alarmItem.getTriggerTime());
@@ -90,7 +90,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
             values.clear();
 
             alarm_info.close();
-            Log.d("ret VALUE IS",String.valueOf(ret));
+            Log.d("ret VALUE IS", String.valueOf(ret));
+            Log.d("insertTriggerTime",String.valueOf(alarmItem.getTriggerTime()));
+            Log.d("insertTesxtTime",alarmItem.getTextTriggerTime());
         }
         return ret;
     }
@@ -101,28 +103,27 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
             Cursor cursor = alarm_info.rawQuery
                     ("SELECT * FROM "+TABLE_ALARM+" WHERE ID=(SELECT max(ID) FROM "+TABLE_ALARM+");",null);
             cursor.moveToFirst();
-            alarmItem = new AlarmItem(
-                    cursor.getInt(0),
-                    (long) cursor.getInt(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    ParseToBooleanForIntOfDB(cursor.getInt(4)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(5)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(6)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(7)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(8)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(9)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(10)),
-                    ParseToBooleanForIntOfDB(cursor.getInt(11)),
-                    cursor.getString(12),
-                    cursor.getString(13),
-                    ParseToBooleanForIntOfDB(cursor.getInt(14))
-            );
+            alarmItem = createAlarmItem(cursor);
         }catch(Exception e){
             e.printStackTrace();
         }
         alarm_info.close();
         Log.d("alarmItem.getID()FROMDB",String.valueOf(alarmItem.getId()));
+        Log.d("TriggerTimeLastItem",String.valueOf(alarmItem.getTriggerTime()));
+        return alarmItem;
+    }
+
+    public AlarmItem getAlarmItemByID(int id){
+        alarm_info = getReadableDatabase();
+        AlarmItem alarmItem = null;
+        try{
+            Cursor cursor = alarm_info.rawQuery
+                    ("SELECT * FROM "+TABLE_ALARM+" WHERE ID="+String.valueOf(id)+";",null);
+            cursor.moveToFirst();
+            alarmItem = createAlarmItem(cursor);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return alarmItem;
     }
 
@@ -132,23 +133,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         try {
             Cursor cursor = alarm_info.rawQuery("SELECT * FROM "+TABLE_ALARM+";",null);
             while (cursor.moveToNext()) {
-                AlarmItem alarmItem = new AlarmItem(
-                        cursor.getInt(0),
-                        (long) cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        ParseToBooleanForIntOfDB(cursor.getInt(4)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(5)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(6)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(7)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(8)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(9)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(10)),
-                        ParseToBooleanForIntOfDB(cursor.getInt(11)),
-                        cursor.getString(12),
-                        cursor.getString(13),
-                        ParseToBooleanForIntOfDB(cursor.getInt(14))
-                );
+                AlarmItem alarmItem = createAlarmItem(cursor);
                 mainAlarmList.add(alarmItem);
                 alarmItem = null;
             }
@@ -161,6 +146,27 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper{
         }
         alarm_info.close();
         return mainAlarmList;
+    }
+
+    private AlarmItem createAlarmItem(Cursor cursor){
+        AlarmItem alarmItem = new AlarmItem(
+                cursor.getInt(0),
+                (long) cursor.getLong(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                ParseToBooleanForIntOfDB(cursor.getInt(4)),
+                ParseToBooleanForIntOfDB(cursor.getInt(5)),
+                ParseToBooleanForIntOfDB(cursor.getInt(6)),
+                ParseToBooleanForIntOfDB(cursor.getInt(7)),
+                ParseToBooleanForIntOfDB(cursor.getInt(8)),
+                ParseToBooleanForIntOfDB(cursor.getInt(9)),
+                ParseToBooleanForIntOfDB(cursor.getInt(10)),
+                ParseToBooleanForIntOfDB(cursor.getInt(11)),
+                cursor.getString(12),
+                cursor.getString(13),
+                ParseToBooleanForIntOfDB(cursor.getInt(14))
+        );
+        return alarmItem;
     }
 
     public boolean ParseToBooleanForIntOfDB(int intOfCursor){

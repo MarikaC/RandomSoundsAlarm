@@ -27,11 +27,12 @@ public class WakeUpActivity extends Activity{
     private TextView label;
     private TextView currentTime;
     private GestureDetector mGestureDetector;
+    private Intent intent;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wake_up);
-        Intent intent = getIntent();
+        intent = getIntent();
 
         label = (TextView)findViewById(R.id.wake_label);
         label.setText(intent.getStringExtra("ALARMITEM_LABEL"));
@@ -145,6 +146,10 @@ public class WakeUpActivity extends Activity{
             mMediaPlayer = null;
         }
         countDownTimer.cancel();
+//        MySQLiteOpenHelper helper = new MySQLiteOpenHelper(getApplicationContext());
+//        AlarmItem alarmItem = helper.getAlarmItemByID(intent.getIntExtra("ALARM_ID", 100));
+//        MyAlarmManager alarmManager = new MyAlarmManager(getApplicationContext());
+//        alarmManager.cancelAlarm(alarmItem);
         Log.d("WakeUpActivity", "finish()");
     }
 }

@@ -11,45 +11,48 @@ import android.util.Log;
  */
 public class MyAlarmManager {
     Context context;
+    AlarmManager am;
 
     public MyAlarmManager(Context c) {
-        // init
-        this.context = c;
+        context = c;
+        am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
     }
 
-    // TODO: 16/01/27  DBからAlarmItemの情報持ってきてaddAlarmでsetする
     public void addAlarm(AlarmItem alarmItem){
         // アラームを設定する
-        Intent intent = getMyIntent(alarmItem);
-        intent.putExtra("ALARMITEM_IMAGEFILEPATH", alarmItem.getImageFilePath());
-        intent.putExtra("ALARMITEM_LABEL", alarmItem.getLabel());
-        PendingIntent mAlarmSender = PendingIntent.getService(context, alarmItem.getId(),
-                intent, 0);
-        // 過去だったら明日にする
-        if (alarmItem.getTriggerTime() < System.currentTimeMillis()) {
-            long oneday = 86400000;
-            alarmItem.setTriggerTime(alarmItem.getTriggerTime() + oneday);
+        if(isSetPendingIntent(alarmItem)) {
+            //none
+        }else{
+            Intent intent = getMyIntent(alarmItem);
+            intent.putExtra("ALARM_ID", alarmItem.getId());
+            intent.putExtra("ALARMITEM_IMAGEFILEPATH", alarmItem.getImageFilePath());
+            intent.putExtra("ALARMITEM_LABEL", alarmItem.getLabel());
+            PendingIntent mAlarmSender = PendingIntent.getBroadcast(context, alarmItem.getId(),
+                    intent, 0);
+            // 過去だったら明日にする
+            if (alarmItem.getTriggerTime() < System.currentTimeMillis()) {
+                long oneday = 86400000;
+                alarmItem.setTriggerTime(alarmItem.getTriggerTime() + oneday);
+            }
+            Log.d("getTriggerTime()",String.valueOf(alarmItem.getTriggerTime()));
+            Log.d("Textver",alarmItem.getTextTriggerTime());
+            am.setExact(AlarmManager.RTC_WAKEUP, alarmItem.getTriggerTime(), mAlarmSender);
         }
-        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, alarmItem.getTriggerTime(), mAlarmSender);
     }
 
     public void cancelAlarm(AlarmItem alarmItem) {
-        if(isSetPendingIntent(alarmItem)) {
-            Intent intent = getMyIntent(alarmItem);
-            PendingIntent mAlarmSender = PendingIntent.getService(context, alarmItem.getId(),
-                    intent, 0);
-            AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            am.cancel(mAlarmSender);
-            mAlarmSender.cancel();
-            Log.d("cancelAlarm","Done");
-        }
+        Intent intent = getMyIntent(alarmItem);
+        PendingIntent mAlarmSender = PendingIntent.getBroadcast(context, alarmItem.getId(),
+                intent, 0);
+        am.cancel(mAlarmSender);
+        mAlarmSender.cancel();
+        Log.d("cancelAlarm", "DoneID " + String.valueOf(alarmItem.getId()));
     }
 
     private boolean isSetPendingIntent(AlarmItem alarmItem){
         Intent intent = getMyIntent(alarmItem);
-        PendingIntent mAlarmSender = PendingIntent.getService(context,alarmItem.getId(),
-                intent,PendingIntent.FLAG_NO_CREATE);
+        PendingIntent mAlarmSender = PendingIntent.getBroadcast(context, alarmItem.getId(),
+                intent, PendingIntent.FLAG_NO_CREATE);
         if(mAlarmSender == null){
             Log.d("isSetPendingIntent","return false");
             return false;
@@ -61,9 +64,9 @@ public class MyAlarmManager {
 
     private Intent getMyIntent(AlarmItem alarmItem) {
         // アラーム時に起動するアプリケーションを登録
-        Intent intent = new Intent(context, MyAlarmService.class);
-        Log.d("alarmItem.getId()",String.valueOf(alarmItem.getId()));
-        intent.setType(String.valueOf(alarmItem.getId()));
+        Intent intent = new Intent(context, MyAlarmReceiver.class);
+        Log.d("alarmItem.getId()", String.valueOf(alarmItem.getId()));
+//        intent.setType(String.valueOf(alarmItem.getId()));
         return intent;
     }
 }
